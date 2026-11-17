@@ -123,11 +123,12 @@ jobs:
       - name: pytest
         run: uv run pytest -q
 
+      # The repo's own gate, not `uv export | pip-audit` with installation: w2v-common is
+      # a git dependency (pip cannot hash a VCS requirement), and a resolving audit fails
+      # on it. `--disable-pip --no-deps` audits the exact exported pins; the script also
+      # honours .pip-audit-ignore.
       - name: pip-audit
-        run: |
-          set -euo pipefail
-          uv export --frozen --all-extras --no-emit-project -o "$RUNNER_TEMP/requirements.txt"
-          uvx --from pip-audit pip-audit -r "$RUNNER_TEMP/requirements.txt"
+        run: bash scripts/pip-audit.sh
 
   # Build (and on main, publish) the image. OFF by default: enable per repo with the
   # repository variable `PUBLISH_IMAGE=true`.
