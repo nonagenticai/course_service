@@ -1,0 +1,6 @@
+coverage.xml
+test-results/unit-tests.xml
+__pycache__/
+*.pyc
+.coverage
+.coverage.*
